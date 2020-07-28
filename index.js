@@ -11,15 +11,23 @@ list = list.list;
 
 function getCombinations(letters, currentWord)
 {
-  for(var i = 0; i < letters.length; i++)
-  {
-    currentWord += letters[i];
-      if (currentWord.length < letters.length) 
-        getCombinations(letters, currentWord);
-      allWords.push(currentWord);
-      currentWord = currentWord.slice(0, -1);
-  }
+    //THIS IS A RECURSIVE FUNCTION!!!
+    //It gets a bit slow if you do 10 or more letters since it would have to make over 9 million combos
+    //But for anything less than that it will run in a split second :))
+    //Kinda glad we only need 6 letters hehe
+    //If anything here doesn't make sense, ask Rachel :))
+    for(var i = 0; i < letters.length; i++)
+    {
+      var lett = letters.shift(); //remove first letter so it doesn't repeat
+      currentWord += lett; //add first letter to current word
+      allWords.push(currentWord); //add the current word to the list
+      if(letters.length > 0) //if there's more letters that havent been added yet
+        getCombinations(letters, currentWord); //recur to add the remaining letters to the current word 
+      letters.push(lett); //add the letter you removed to the end of the list so it will be included in the next words
+      currentWord = currentWord.slice(0, -1); //remove the last letter you added so you can add a different letter next time
+    }
 }
+
 
 const getRandomLetters = (number) => {
     let letter = [];
@@ -50,6 +58,6 @@ const getWords = (array) => {
 }
 
 var allWords = [];
-getCombinations(['a', 'b', 'c'], "");
+getCombinations(['a', 'b', 'c', 'd'], "", 0);
 console.log(allWords);
 //console.log(getWords(getRandomLetters(10)));
