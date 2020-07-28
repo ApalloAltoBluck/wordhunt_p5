@@ -18,12 +18,12 @@ function getCombinations(letters, currentWord)
     //If anything here doesn't make sense, ask Rachel :))
     for(var i = 0; i < letters.length; i++)
     {
-      var lett = letters.shift(); //remove first letter so it doesn't repeat
-      currentWord += lett; //add first letter to current word
+      var lett = letters.shift(); //remove first letter so it is not added to the same word twice
+      currentWord += lett; //add the letter to current word
       allWords.push(currentWord); //add the current word to the list
-      if(letters.length > 0) //if there's more letters that havent been added yet
+      if(letters.length > 0) //if there's more letters that havent been added to the current word yet
         getCombinations(letters, currentWord); //recur to add the remaining letters to the current word 
-      letters.push(lett); //add the letter you removed to the end of the list so it will be included in the next words
+      letters.push(lett); //add the letter you removed earlier to the end of the list so it will be included in the next words
       currentWord = currentWord.slice(0, -1); //remove the last letter you added so you can add a different letter next time
     }
 }
