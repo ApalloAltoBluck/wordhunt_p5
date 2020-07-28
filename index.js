@@ -21,7 +21,7 @@ function getCombinations(letters, currentWord)
       var lett = letters.shift(); //remove first letter so it is not added to the same word twice
       currentWord += lett; //add the letter to current word
       allWords.push(currentWord); //add the current word to the list
-      if(letters.length > 0) //if there's more letters that havent been added to the current word yet
+      if(letters) //if there's more letters that havent been added to the current word yet
         getCombinations(letters, currentWord); //recur to add the remaining letters to the current word 
       letters.push(lett); //add the letter you removed earlier to the end of the list so it will be included in the next words
       currentWord = currentWord.slice(0, -1); //remove the last letter you added so you can add a different letter next time
@@ -58,6 +58,6 @@ const getWords = (array) => {
 }
 
 var allWords = [];
-getCombinations(['a', 'b', 'c', 'd'], "", 0);
+getCombinations(['a', 'b', 'c'], "", 0);
 console.log(allWords);
 //console.log(getWords(getRandomLetters(10)));
