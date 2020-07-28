@@ -1,0 +1,104 @@
+// Rachel Fernandes
+// Based off of Daniel Shiffman
+// http://codingtra.in
+// http://patreon.com/codingtrain
+// Code for: https://youtu.be/ZjVyKXp9hec
+
+// Keep track of our socket connection
+var socket;
+
+var player;
+var opponent;
+var players = {};
+var playerNames = new Set();
+var zoom = 1;
+var htmlList;
+
+function setup() {
+  createCanvas(200, 200);
+
+  // Start a socket connection to the server
+  // Some day we would run this server somewhere else
+  socket = io.connect('http://localhost:3000');
+
+  htmlList = document.getElementById("playerList");
+
+  socket.on('heartbeat', function(data) {
+    htmlList.innerHTML = ""; 
+    data.forEach(function(item, index){
+      players[item.name] = item;
+      playerNames.add(item.name);
+    });
+  }); 
+
+
+  document.getElementById("playerButton").onclick = function (){
+    var n = document.getElementById("playerInput").value;
+    console.log("players", players);
+    if(n in players)
+    {
+      document.getElementById("playerText").innerHTML = "That username is taken. Try again";
+      console.log("Username " + n + " was taken.");
+    }
+    else
+    {
+      player = new Player(n, 0);
+      console.log({ name: player.name, score: player.score, hasOpponent: player.hasOpponent });
+      socket.emit('start', { name: player.name});
+      document.getElementById("playerText").innerHTML = playerString(player);
+      console.log("Player name set to " + player.name);
+    }
+  }
+
+  document.getElementById("opponentButton").onclick = function (){
+    //set player name to input
+    var n = document.getElementById("opponentInput").value;
+    if(n in players)
+    {
+      if(players[n].hasOpponent)
+      {
+        document.getElementById("opponentText").innerHTML = "That opponent was taken. Try again";
+        console.log("Opponent " + n + " was taken.");
+      }
+      else
+      {
+        opponent = players[n];
+        document.getElementById("opponentText").innerHTML = opponent.name + " " + opponent.id;
+        console.log("chose opponent " + opponent.name);
+      }
+    }
+    else
+    {
+      document.getElementById("opponentText").innerHTML = "That opponent does not exist. Try again";
+      console.log("Opponent " + n + "does not exist.");
+    }
+  }
+
+}
+
+function draw() {
+  background(0);
+}
+
+function gameOver() //to be called when the timer runs out
+{
+    player.update();
+}
+
+function playerString(p)
+{
+    return `Player: ${ p.name } Score: ${ p.score }`;
+}
+
+function Player(name, score) {
+  this.name = name;
+  this.score = score;
+  this.hasOpponent = false;
+
+  this.update = function()
+  {
+    socket.emit('update', { name: this.name, score: this.score });
+  }
+}
+
+

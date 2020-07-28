@@ -1,11 +1,15 @@
 {
-  "name": "cssi-scripts",
+  "name": "sockets_p5",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This is an example for how to use sockets with p5.js.",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Daniel Shiffman",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^1.4.5"
+  }
 }
