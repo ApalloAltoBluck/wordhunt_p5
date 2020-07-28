@@ -8,16 +8,17 @@ let list = require('./list.js');
 list = list.list;
 
 // source: https://codereview.stackexchange.com/a/7042
-function getCombinations(chars) {
-    var result = [];
-    var f = function (prefix, chars) {
-        for (var i = 0; i < chars.length; i++) {
-            result.push(prefix + chars[i]);
-            f(prefix + chars[i], chars.slice(i + 1));
-        }
-    }
-    f('', chars);
-    return result;
+
+function getCombinations(letters, currentWord)
+{
+  for(var i = 0; i < letters.length; i++)
+  {
+    currentWord += letters[i];
+      if (currentWord.length < letters.length) 
+        getCombinations(letters, currentWord);
+      allWords.push(currentWord);
+      currentWord = currentWord.slice(0, -1);
+  }
 }
 
 const getRandomLetters = (number) => {
@@ -48,4 +49,7 @@ const getWords = (array) => {
     return wordArray
 }
 
-console.log(getWords(getRandomLetters(10)));
+var allWords = [];
+getCombinations(['a', 'b', 'c'], "");
+console.log(allWords);
+//console.log(getWords(getRandomLetters(10)));
