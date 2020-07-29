@@ -18,7 +18,6 @@ function Player(id, name) {
 }
 
 function Game(p1, p2) {
-  this.roomName = p1.id;
   this.player1 = p1;
   this.player2 = p2;
   this.letters = ['a', 'b', 'c', 'd', 'e', 'f']; //call oliver's function to get random letters
@@ -53,6 +52,9 @@ var io = require('socket.io')(server);
 //function heartbeat() {
 //  io.sockets.emit('heartbeat', players);
 //}
+function sendGameData(id) {
+  io.to(id).emit('gameData', games[id]);
+}
 
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
@@ -81,10 +83,9 @@ io.sockets.on(
       var g = new Game(players[socket.id], players[data.id]);
       games[socket.id] = g;
       games[data.id] = g;
-      socket.join(socket.id);
       console.log('games', games);
-      io.to(socket.id).emit('gameData', games[socket.id]); //sends only to room
-      io.sockets.emit('gameData', games[socket.id]); //sends to all players
+      sendGameData(socket.id);
+      sendGameData(data.id);
     });
 
     socket.on('disconnect', function(reason) {
