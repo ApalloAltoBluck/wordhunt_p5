@@ -6,13 +6,10 @@
 
 // Keep track of our socket connection
 var socket;
-
 var player;
 var opponent;
 var players = {};
 var playerNames = new Set();
-var zoom = 1;
-var htmlList;
 
 function setup() {
   createCanvas(200, 200);
@@ -21,17 +18,12 @@ function setup() {
   // Some day we would run this server somewhere else
   socket = io.connect('http://localhost:3000');
 
-  htmlList = document.getElementById("playerList");
 
   socket.on('heartbeat', function(data) {
-    htmlList.innerHTML = "";
     console.log(data); 
-    for (var key in data) {
-        if (data.hasOwnProperty(key)) {           
-            console.log(key, data[key]);
+    for (var key in data)
+        if (data.hasOwnProperty(key))          
             players[data[key].name] = data[key];
-        }
-    }
   }); 
 
 

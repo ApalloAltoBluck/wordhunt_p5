@@ -20,7 +20,8 @@ function Player(id, name) {
 function Game(p1, p2) {
   this.player1 = p1;
   this.player2 = p2;
-  this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
+  this.letters = ['a', 'b', 'c', 'd', 'e', 'f']; //call oliver's function to get random letters
+  this.words = ['bad', 'fed', 'fad']; //call oliver's function to get possible words from letters
   this.winner;
 }
 
@@ -45,11 +46,6 @@ app.use(express.static('public'));
 // WebSocket Portion
 // WebSockets work with the HTTP server
 var io = require('socket.io')(server);
-//io.on('connection', function(client){});
-//io.listen(3000, {
-//  SameSite: none,
-//  Secure
-//});
 
 setInterval(heartbeat, 33);
 
