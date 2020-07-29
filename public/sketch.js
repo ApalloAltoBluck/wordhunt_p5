@@ -8,6 +8,7 @@
 var socket;
 var player;
 var opponent;
+var game;
 var players = {};
 var playerNames = new Set();
 
@@ -24,6 +25,10 @@ function setup() {
         if (data.hasOwnProperty(key))          
             players[data[key].name] = data[key];
     console.log(players);
+  }); 
+  socket.on('gameData', function(data) { 
+    game = data;
+    console.log("gameData", data);
   }); 
 
   document.getElementById("playerButton").onclick = function (){
