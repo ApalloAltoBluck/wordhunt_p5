@@ -24,11 +24,14 @@ function setup() {
   htmlList = document.getElementById("playerList");
 
   socket.on('heartbeat', function(data) {
-    htmlList.innerHTML = ""; 
-    data.forEach(function(item, index){
-      players[item.name] = item;
-      playerNames.add(item.name);
-    });
+    htmlList.innerHTML = "";
+    console.log(data); 
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {           
+            console.log(key, data[key]);
+            players[data[key].name] = data[key];
+        }
+    }
   }); 
 
 
@@ -44,7 +47,7 @@ function setup() {
     {
       player = new Player(n, 0);
       console.log({ name: player.name, score: player.score, hasOpponent: player.hasOpponent });
-      socket.emit('start', { name: player.name});
+      socket.emit('start', {name: player.name});
       document.getElementById("playerText").innerHTML = playerString(player);
       console.log("Player name set to " + player.name);
     }
@@ -63,6 +66,8 @@ function setup() {
       else
       {
         opponent = players[n];
+        socket.emit('pairUp', { id: opponent.id });
+        console.log("pair up emitted");
         document.getElementById("opponentText").innerHTML = opponent.name + " " + opponent.id;
         console.log("chose opponent " + opponent.name);
       }

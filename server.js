@@ -7,13 +7,21 @@
 // Based off of Shawn Van Every's Live Web
 // http://itp.nyu.edu/~sve204/liveweb_fall2013/week3.html
 
-var players = [];
+var players = {};
+var games = {};
 
-function Player(id, name, score) {
+function Player(id, name) {
   this.id = id;
   this.name = name;
-  this.score = score;
+  this.score = 0;
   this.hasOpponent = false;
+}
+
+function Game(p1, p2) {
+  this.player1 = p1;
+  this.player2 = p2;
+  this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
+  this.winner;
 }
 
 // Using express: http://expressjs.com/
@@ -58,21 +66,21 @@ io.sockets.on(
     console.log('We have a new player: ' + socket.id);
     
     socket.on('start', function(data) {
-      console.log(socket.id + ' ' + data.name + ' ' + data.score);
-      players.push(new Player(socket.id, data.name, data.score));
+      console.log(socket.id + ' ' + data.name);
+      players[socket.id] = new Player(socket.id, data.name);
+      console.log(players);
     });
 
     socket.on('update', function(data) {      
-      var playa;
-      for (var i = 0; i < players.length; i++)
-        if (socket.id == players[i].id) 
-          playa = players[i];
-        
-      if(playa != undefined)
-      {
-        playa.name = data.name;
-        playa.score = data.score; 
-      }
+      players[socket.id].name = data.name;
+      players[socket.id].score = data.score;
+    });
+
+    socket.on('pairUp', function(data) {      
+      var g = new Game(players[socket.id], players[data.id]);
+      games[socket.id] = g;
+      games[data.id] = g;
+      console.log(games);
     });
 
     socket.on('disconnect', function(reason) {
@@ -80,7 +88,10 @@ io.sockets.on(
       if (reason === 'io server disconnect')
         socket.connect();
       else
+      {
         console.log('Player ' + socket.id +' has disconnected');
+        delete players[socket.id];
+      }
     });
 
   }
