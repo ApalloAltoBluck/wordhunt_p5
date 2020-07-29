@@ -65,7 +65,7 @@ const getWords = (array) => {
     return wordArray
 }
 
-console.log(getWords(getRandomLetters(5)));
+//console.log(getWords(getRandomLetters(5)));
 
 
 //Rachel's server code below
