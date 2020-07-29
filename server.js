@@ -18,6 +18,7 @@ function Player(id, name) {
 }
 
 function Game(p1, p2) {
+  this.roomName = p1.id;
   this.player1 = p1;
   this.player2 = p2;
   this.letters = ['a', 'b', 'c', 'd', 'e', 'f']; //call oliver's function to get random letters
@@ -47,11 +48,11 @@ app.use(express.static('public'));
 // WebSockets work with the HTTP server
 var io = require('socket.io')(server);
 
-setInterval(heartbeat, 33);
+//setInterval(heartbeat, 33);
 
-function heartbeat() {
-  io.sockets.emit('heartbeat', players);
-}
+//function heartbeat() {
+//  io.sockets.emit('heartbeat', players);
+//}
 
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
@@ -64,7 +65,8 @@ io.sockets.on(
     socket.on('start', function(data) {
       console.log(socket.id + ' ' + data.name);
       players[socket.id] = new Player(socket.id, data.name);
-      console.log(players);
+      console.log('players', players);
+      io.sockets.emit('allPlayerData', players);
     });
 
     socket.on('update', function(data) {      
@@ -72,11 +74,17 @@ io.sockets.on(
       players[socket.id].score = data.score;
     });
 
-    socket.on('pairUp', function(data) {      
+    socket.on('pairUp', function(data) { 
+      players[socket.id].hasOpponent = true;
+      players[data.id].hasOpponent = true;
+      io.sockets.emit('allPlayerData', players);     
       var g = new Game(players[socket.id], players[data.id]);
       games[socket.id] = g;
       games[data.id] = g;
-      console.log(games);
+      socket.join(socket.id);
+      console.log('games', games);
+      io.to(socket.id).emit('gameData', games[socket.id]); //sends only to room
+      io.sockets.emit('gameData', games[socket.id]); //sends to all players
     });
 
     socket.on('disconnect', function(reason) {

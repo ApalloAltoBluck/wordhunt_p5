@@ -19,17 +19,19 @@ function setup() {
   socket = io.connect('http://localhost:3000');
 
 
-  socket.on('heartbeat', function(data) {
-    console.log(data); 
+  socket.on('allPlayerData', function(data) { 
+    players = {};
     for (var key in data)
         if (data.hasOwnProperty(key))          
             players[data[key].name] = data[key];
+    console.log(players);
   }); 
 
 
   document.getElementById("playerButton").onclick = function (){
     var n = document.getElementById("playerInput").value;
     console.log("players", players);
+
     if(n in players)
     {
       document.getElementById("playerText").innerHTML = "That username is taken. Try again";
@@ -60,6 +62,7 @@ function setup() {
         opponent = players[n];
         socket.emit('pairUp', { id: opponent.id });
         console.log("pair up emitted");
+        player.hasOpponent = true;
         document.getElementById("opponentText").innerHTML = opponent.name + " " + opponent.id;
         console.log("chose opponent " + opponent.name);
       }
