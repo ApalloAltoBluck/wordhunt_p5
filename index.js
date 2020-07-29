@@ -7,7 +7,6 @@ let list = require('./list.js');
 
 list = list.list;
 
-// source: https://codereview.stackexchange.com/a/7042
 
 let comboWrapper = (letters) => {
     let currentWord = '';
