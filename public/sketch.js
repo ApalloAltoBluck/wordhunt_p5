@@ -18,7 +18,6 @@ function setup() {
   // Some day we would run this server somewhere else
   socket = io.connect('http://localhost:3000');
 
-
   socket.on('allPlayerData', function(data) { 
     players = {};
     for (var key in data)
@@ -26,7 +25,6 @@ function setup() {
             players[data[key].name] = data[key];
     console.log(players);
   }); 
-
 
   document.getElementById("playerButton").onclick = function (){
     var n = document.getElementById("playerInput").value;
@@ -73,10 +71,10 @@ function setup() {
       console.log("Opponent " + n + "does not exist.");
     }
   }
-
 }
 
-function draw() {
+function draw() 
+{
   background(0);
 }
 
