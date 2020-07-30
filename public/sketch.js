@@ -10,16 +10,12 @@ var player;
 var opponent;
 var game;
 var players = {};
-var playerNames = new Set();
 
 function setup() {
   createCanvas(200, 200);
 
   // Start a socket connection to the server
   // Some day we would run this server somewhere else
-  console.log(location.protocol);
-  console.log(location.hostname);
-  console.log(location.port);
   socket = io.connect(window.location.hostname); //'http://localhost:3000'
 
   socket.on('allPlayerData', function(data) { 

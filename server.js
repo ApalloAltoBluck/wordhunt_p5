@@ -114,7 +114,6 @@ console.log('Listening at http://' + host + ':' + port);
 console.log(process.env.PORT);
 console.log(host);
 console.log(port);
-
 var io = require('socket.io')(server);
 
 //setInterval(heartbeat, 33);
