@@ -1,8 +1,8 @@
 {
-  "name": "cssi-scripts",
+  "name": "sockets_p5",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This is an example for how to use sockets with p5.js.",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +10,14 @@
   "license": "ISC",
   "dependencies": {
     "check-word": "^1.1.0",
+<<<<<<< HEAD
     "p5": "^1.1.9",
     "word-check": "^1.0.2"
+=======
+    "word-check": "^1.0.2",
+    "express": "^4.17.1",
+    "socket.io": "^1.4.5"
+>>>>>>> 26c622119c24db7d41e9924400ba4d8ebc306392
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
