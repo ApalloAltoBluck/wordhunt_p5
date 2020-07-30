@@ -41,6 +41,7 @@ let comboWrapper = (letters) => {
 const getRandomLetters = (number) => {
     let letter = [];
     let finalList = [];
+    const vowels = ['a','e','i','o','u']
     for (let [first, second] of Object.entries(list)) {
         // Ternary conditional that appends etaoin shrdlu twice and then does random selection of da letters
         second > 1 ? letter = letter.concat(new Array(second).fill(first)) : letter.push(first);
@@ -49,7 +50,12 @@ const getRandomLetters = (number) => {
         // takes random element of array with duplicates for more common letters, push to the final list
         finalList.push(letter[Math.floor(Math.random() * letter.length)]);
     }
-    return finalList;
+    for (vowel of vowels){
+      if (finalList.includes(vowel)){
+        return finalList;
+      }
+    } 
+    getRandomLetters(number);
 }
 
 
@@ -58,11 +64,18 @@ const getWords = (array) => {
     let wordArray = []
     console.log(array)
     for (result of results) {
+      if (result.length > 2){
         if (words.check(result)) {
             wordArray.push(result)
         }
     }
+  } 
+  if (wordArray.length < 30){
+    getWords(getRandomLetters(6))
+  }
+  else{
     return wordArray
+  }
 }
 
 //console.log(getWords(getRandomLetters(5)));
@@ -158,3 +171,6 @@ io.sockets.on('connection',
     });
   }
 );
+
+
+console.log(getWords(getRandomLetters(6)));
