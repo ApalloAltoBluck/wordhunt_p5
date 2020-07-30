@@ -7,7 +7,7 @@
 // http://itp.nyu.edu/~sve204/liveweb_fall2013/week3.html
 
 //Oliver's letter/word code below
-require("@babel/core").transform("code");
+/*require("@babel/core").transform("code");
 
 let checkWord = require('check-word'),
     words = checkWord('en'); // setup the language for check, default is en
@@ -78,7 +78,7 @@ const getWords = (array) => {
   }
   else
     return wordArray;
-}
+}*/
 
 //Rachel's server code below
 
@@ -95,8 +95,10 @@ function Player(id, name) {
 function Game(p1, p2) {
   this.player1 = p1;
   this.player2 = p2;
-  this.letters = getRandomLetters(6); //call oliver's function to get random letters
-  this.words = getWords(this.letters); //call oliver's function to get possible words from letters
+  this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
+  this.words = ['fab', 'fed', 'cab', 'bed', 'bad'];
+  //this.letters = getRandomLetters(6); //call oliver's function to get random letters
+  //this.words = getWords(this.letters); //call oliver's function to get possible words from letters
   this.winner;
 }
 
