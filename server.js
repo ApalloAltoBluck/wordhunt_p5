@@ -16,20 +16,44 @@ let list = require('./list.js');
 
 list = list.list;
 
+const letterFrequencies = (function(){
+    let letter = [];
+    for (let [first, second] of Object.entries(list)) // Ternary conditional that appends etaoin shrdlu twice and then does random selection of da letters
+        second > 1 ? letter = letter.concat(new Array(second).fill(first)) : letter.push(first);
+    return letter;
+})();
 
-let comboWrapper = (letters) => {
+
+const getRandomLetters = (number) => {
+    let finalList = [];
+    var vowels = new Set(['a','e','i','o','u']);
+    var vowelCount = 0;
+    var l;
+    for (const x of Array(number).keys()){
+        l = letterFrequencies[Math.floor(Math.random() * letterFrequencies.length)];
+        if(vowels.has(l))
+            vowelCount++;
+        finalList.push(l);
+    } // takes random element of array with duplicates for more common letters, push to the final list    
+      if (vowelCount > 0 && vowelCount < number-2)
+        return finalList;
+      else
+        return getRandomLetters(number);
+}
+
+
+let getLetterCombinations = (letters) => {
     let currentWord = '';
     let allWords = [];
 
-    getCombinations(letters,currentWord);
-    function getCombinations(letters, currentWord) {
+    comboHelper(letters,currentWord);
+    function comboHelper(letters, currentWord) {
         for (let i = 0; i < letters.length; i++) {
             let lett = letters.shift(); //remove first letter so it is not added to the same word twice
             currentWord += lett; //add the letter to current word
             allWords.push(currentWord); //add the current word to the list
-            if (letters.length > 0) {//if there's more letters that havent been added to the current word yet
-                getCombinations(letters, currentWord); //recur to add the remaining letters to the current word 
-            }
+            if (letters.length > 0)//if there's more letters that havent been added to the current word yet
+                comboHelper(letters, currentWord); //recur to add the remaining letters to the current word 
             letters.push(lett); //add the letter you removed earlier to the end of the list so it will be included in the next words
             currentWord = currentWord.slice(0, -1); //remove the last letter you added so you can add a different letter next time
         }
@@ -37,32 +61,10 @@ let comboWrapper = (letters) => {
     return allWords
 }
 
-
-const getRandomLetters = (number) => {
-    let letter = [];
-    let finalList = [];
-    const vowels = ['a','e','i','o','u']
-    for (let [first, second] of Object.entries(list)) {
-        // Ternary conditional that appends etaoin shrdlu twice and then does random selection of da letters
-        second > 1 ? letter = letter.concat(new Array(second).fill(first)) : letter.push(first);
-    }
-    for (const x of Array(number).keys()) {
-        // takes random element of array with duplicates for more common letters, push to the final list
-        finalList.push(letter[Math.floor(Math.random() * letter.length)]);
-    }
-    for (vowel of vowels){
-      if (finalList.includes(vowel)){
-        return finalList;
-      }
-    } 
-    getRandomLetters(number);
-}
-
-
 const getWords = (array) => {
-    let results = comboWrapper(array)
-    let wordArray = []
-    console.log(array)
+    let results = getLetterCombinations(array);
+    let wordArray = [];
+    console.log(array);
     for (result of results) {
       if (result.length > 2){
         if (words.check(result)) {
@@ -71,15 +73,12 @@ const getWords = (array) => {
     }
   } 
   if (wordArray.length < 30){
-    getWords(getRandomLetters(6))
+    array = getRandomLetters(6);
+    return getWords(array);
   }
-  else{
-    return wordArray
-  }
+  else
+    return wordArray;
 }
-
-//console.log(getWords(getRandomLetters(5)));
-
 
 //Rachel's server code below
 
@@ -173,4 +172,4 @@ io.sockets.on('connection',
 );
 
 
-console.log(getWords(getRandomLetters(6)));
+//console.log(getWords(getRandomLetters(6)));
