@@ -101,7 +101,7 @@ function Game(p1, p2) {
   //this.words = getWords(this.letters); //call oliver's function to get possible words from letters
   this.winner;
 }
-
+var port;
 var express = require('express'); // Using express: http://expressjs.com/
 var app = express();
 var server = app.listen(process.env.PORT || 23414, listen); // process.env.PORT is related to deploying on heroku
@@ -109,7 +109,7 @@ var server = app.listen(process.env.PORT || 23414, listen); // process.env.PORT 
 function listen() // This call back just tells us that the server has started
 {
   var host = server.address().address;
-  var port = server.address().port;
+  port = server.address().port;
   console.log('Listening at http://' + host + ':' + port);
 }
 
