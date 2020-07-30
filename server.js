@@ -104,7 +104,7 @@ function Game(p1, p2) {
 var port;
 var express = require('express'); // Using express: http://expressjs.com/
 var app = express();
-var server = app.listen(process.env.PORT || 23414, listen); // process.env.PORT is related to deploying on heroku
+var server = app.listen(process.env.PORT || port, listen); // process.env.PORT is related to deploying on heroku
 
 function listen() // This call back just tells us that the server has started
 {
