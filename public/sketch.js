@@ -20,7 +20,7 @@ function setup() {
   console.log(location.protocol);
   console.log(location.hostname);
   console.log(location.port);
-  socket = io.connect('http://localhost:3000');
+  socket = io.connect(); //'http://localhost:3000'
 
   socket.on('allPlayerData', function(data) { 
     players = {};
