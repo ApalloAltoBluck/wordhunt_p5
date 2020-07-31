@@ -7,10 +7,10 @@
 // http://itp.nyu.edu/~sve204/liveweb_fall2013/week3.html
 
 //Oliver's letter/word code below
-/*require("@babel/core").transform("code");
+//require("@babel/core").transform("code");
 
 let checkWord = require('check-word'),
-    words = checkWord('en'); // setup the language for check, default is en
+words = checkWord('en'); // setup the language for check, default is en
 
 let list = require('./list.js');
 
@@ -79,7 +79,7 @@ const getWords = (array) => {
   else
     return wordArray;
 }
-*/
+
 
 //Rachel's server code below
 
@@ -96,16 +96,16 @@ function Player(id, name) {
 function Game(p1, p2) {
   this.player1 = p1;
   this.player2 = p2;
-  this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
-  this.words = ['fab', 'fed', 'cab', 'bed', 'bad'];
-  //this.letters = getRandomLetters(6); //call oliver's function to get random letters
-  //this.words = getWords(this.letters); //call oliver's function to get possible words from letters
+  //this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
+  //this.words = ['fab', 'fed', 'cab', 'bed', 'bad'];
+  this.letters = getRandomLetters(6); //call oliver's function to get random letters
+  this.words = getWords(this.letters); //call oliver's function to get possible words from letters
   this.winner;
 }
 
 var express = require('express'); // Using express: http://expressjs.com/
 var app = express();
-var server = app.listen(process.env.PORT); // process.env.PORT is related to deploying on heroku
+var server = app.listen(process.env.PORT || 3000); // process.env.PORT is related to deploying on heroku
 app.use(express.static('public'));
 
 var host = server.address().address;
