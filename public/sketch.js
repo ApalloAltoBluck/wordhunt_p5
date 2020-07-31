@@ -1,37 +1,38 @@
-// Rachel Fernandes
-// Keep track of our socket connection
-
-console.log("hi");
+// Rachel Fernandes, Kyla Guru, Priscilla Maryanski
 
 //UI/UX Stuffs
 let scoreCard,
-  myScore,
   opponentCard,
-  opponentScore,
   testLetter,
   nameInputBox,
   partnerInputBox,
-  timerValue,
   woodBackground,
   submitButton,
   submitOpponent,
-  releasedLetters,
-  pushed,
   opponentName,
   xPositions,
   yPositions,
-  userClickedLetters,
-  countLetters,
   letterToMove,
   letterToMoveInd;
+let on1 = false;
+let on2 = false;
+let on3 = false;
+let on4 = false;
+let on5 = false;
+let on6 = false;
+let timesUp = false;
+let opponentScore = 0;
 let letterBoxes = [];
 let letterTiles = [];
+let releasedLetters = [];
+let userClickedLetters = [];
 let words; 
+
 //Socket stuffs
 let socket, player, opponent, game;
 let players = {};
 
-
+//Holds player info and functions
 function Player(name, score) {
   this.name = name;
   this.score = score;
@@ -43,26 +44,16 @@ function Player(name, score) {
   }
 }
 
-
-function playerString(p) {
-  return `Player: ${p.name} Score: ${p.score}`;
-}
-
 function setup() {
+  console.log("Starting setup!");
   // Canvas & color settings
-
   createCanvas(800, 800);
   colorMode(RGB, 255);
   backgroundColor = color(156, 143, 173);
-  releasedLetters = [];
-  userClickedLetters = [];
-  countLetters = 0;
+    countLetters = 0;
   myScore = 0;
   opponentScore = 0;
   pushed = false;
-  // createLetters();
-  //JUST PUTTING THESE TWO LETTERS TO TEST
-
   woodBackground = createImg(
     "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fupdated-wooden-bg.svg?v=1595980097536",
     "wood background"
@@ -70,11 +61,8 @@ function setup() {
   woodBackground.size(800, 800);
   woodBackground.position(5, 5);
  
-
-  //more socket stuff
-  
-  socket = io.connect('http://localhost:3000'); //window.location.hostname);
-
+  //more socket stuff 
+  socket = io.connect(window.location.hostname); //'http://localhost:3000');
   socket.on('allPlayerData', function(data) { 
     players = {};
     for (var key in data)
@@ -106,105 +94,85 @@ function setup() {
 
   });
 
-  //input boxes for name
+  //Input boxes for name
   nameInputBox = createInput("Input Your Name");
   nameInputBox.position(350, 350);
 
   submitButton = createButton("SUBMIT");
-  submitButton.position(
-    350 + nameInputBox.width / 2 - submitButton.width / 2,
-    430
-  );
+  submitButton.position(350 + nameInputBox.width / 2 - submitButton.width / 2, 430);
   submitButton.mousePressed(handlePlayerInput);
-
-  //check if names are valid
-  //if they are valid
 
   xPositions = [125, 215, 305, 395, 485, 575];
   yPositions = [335, 425];
+  console.log("Done with setup!");
+  //handlePlayerInput(); //I think this should be removed
 }
 
 function handlePlayerInput() {
   var n = nameInputBox.value();
-
-    console.log("players", players);
-    if(n in players)
-    {
-      alert("That username is taken. Try again");
-      console.log("Username " + n + " was taken.");
-    }
-    else
-    {
-  player = new Player(n, 0);
-  console.log({
-    name: player.name,
-    score: player.score,
-    hasOpponent: player.hasOpponent
-  });
-  socket.emit('start', {name: player.name});
-  console.log("Player name set to " + player.name);
-  submitButton.mousePressed(startRequest);
-  partnerInputBox = createInput("Opponent Name");
-  partnerInputBox.position(350, 390);
+  console.log("players", players);
+  if(n in players)
+  {
+    alert("That username is taken. Try again");
+    console.log("Username " + n + " was taken.");
+  }
+  else
+  {
+    player = new Player(n, 0);
+    socket.emit('start', {name: player.name});
+    console.log("Player name set to " + player.name);
+    submitButton.mousePressed(startRequest);
+    partnerInputBox = createInput("Opponent Name");
+    partnerInputBox.position(350, 390);
+    submitButton.mousePressed(startRequest);
   }
 }
 
 function startRequest() {
   hideStartItems();
   var n = partnerInputBox.value();
-
-    if(n in players)
+  if(n in players)
+  {
+    if(players[n].hasOpponent)
     {
-      if(players[n].hasOpponent)
-      {
-        alert("That opponent was taken. Try again");
-        console.log("Opponent " + n + " was taken.");
-      }
-      else
-      {
-        opponent = players[n];
-        socket.emit('pairUp', { id: opponent.id });
-  
-        opponentName = n;
-        console.log(opponentName);
-        console.log("pair up emitted");
-        player.hasOpponent = true;
-
-        console.log("chose opponent " + n);
-      }
+      alert("That opponent was taken. Try again");
+      console.log("Opponent " + n + " was taken.");
     }
-  
     else
     {
-      alert("That opponent does not exist. Try again");
-      console.log("Opponent " + n + "does not exist.");
+      opponent = players[n];
+      socket.emit('pairUp', { id: opponent.id });
+      console.log("Pair up emitted");
+      opponentName = n;
+      player.hasOpponent = true;
+      console.log("Chose opponent " + n);
     }
+  }
+  else
+  {
+    alert("That opponent does not exist. Try again");
+    console.log("Opponent " + n + "does not exist.");
+  }
   
-
   startButton = createButton("START GAME");
   startButton.mouseClicked(setLetterBoxes);
   startButton.size(200, 100);
-  //startButton.position(310, 350); MIDDLE OF SCREEN
   startButton.position(310, 360);
   startButton.style("font-family", "Arial");
   startButton.style("font-size", "32px");
 }
 
 function hideStartItems() {
-  console.log("she really is hiding everything.");
+  console.log("She really is hiding everything.");
   nameInputBox.hide();
   partnerInputBox.hide();
   submitButton.hide();
 }
 
-
-function draw() {
-  //pressLetter(game.letters[q], q)
-}
+//DONE INTEGRATING TILL HERE
 
 function translation(l, i) {
   //We want to check if any one of the letters have been pressed
-
   if (userClickedLetters.length < 6) {
     userClickedLetters += letterToMove;
     console.log("Placing letter " + l);
@@ -536,7 +504,6 @@ function displayLetterUpSix(l) {
     console.log("if this works, then yay letter 1");
   })();
 }
-
 function createGrayBoxes() {
   for (var q = 0; q < 6; q++) {
     let i = createImg(

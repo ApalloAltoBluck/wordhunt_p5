@@ -1,24 +1,10 @@
-/* CSS files add styling rules to your content */
-
 @import url(https://fonts.googleapis.com/css?family=Schoolbell&v1);
 @import url(https://fonts.googleapis.com/css2?family=Rowdies:wght@700&display=swap);
 body {
-  /*Stuff that was here before*/
   font-family: "Schoolbell", arial, serif;
   margin: 2em;
-  /*font-family: 'Rowdies', cursive;*/
-
-  /*new stuff*/
-  /*
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  */
 }
-
 h1 {
-  /*font-style: italic;*/
   color: #373fff;
 }
 #countdown {
@@ -30,29 +16,12 @@ h1 {
   z-index: 30;
   position: absolute;
 }
-
-/*#startGame {
-  z-index: 40;
-  position: absolute;
-}*/
-/*
-#opponentName {
-  z-index: 30;
-  position: absolute;
-  text-align: center;
-}
-#playerName {
-  z-index: 30;
-  position: absolute;
-  text-align: center;
-}*/
-
 #printName {
   font-size: 35px;
   z-index: 70;
   position: absolute;
   left: 300px;
-  top: 180px;
+  top: 160px;
 }
 #printOpponentName {
   font-size: 25px;
@@ -61,18 +30,16 @@ h1 {
   left: 601px;
   top: 40px;
 }
-
-/*#displayLetters {
+#printScoreRealTime {
+  font-size: 25px;
+  top: 205px;
+  left: 370px;
   z-index: 100;
-  font-size:35px;
   position: absolute;
-  top: 435px;
-  left: 125px;
-}*/
-
+}
 #displayLetter1 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 155px;
@@ -80,7 +47,7 @@ h1 {
 }
 #displayLetter2 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 245px;
@@ -88,7 +55,7 @@ h1 {
 }
 #displayLetter3 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 335px;
@@ -96,7 +63,7 @@ h1 {
 }
 #displayLetter4 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 425px;
@@ -104,7 +71,7 @@ h1 {
 }
 #displayLetter5 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 515px;
@@ -112,7 +79,7 @@ h1 {
 }
 #displayLetter6 {
   z-index: 100;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 435px;
   left: 605px;
@@ -121,7 +88,7 @@ h1 {
 
 #displayLetterUp1 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 155px;
@@ -129,7 +96,7 @@ h1 {
 }
 #displayLetterUp2 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 245px;
@@ -137,7 +104,7 @@ h1 {
 }
 #displayLetterUp3 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 335px;
@@ -145,7 +112,7 @@ h1 {
 }
 #displayLetterUp4 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 425px;
@@ -153,7 +120,7 @@ h1 {
 }
 #displayLetterUp5 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 515px;
@@ -161,36 +128,23 @@ h1 {
 }
 #displayLetterUp6 {
   z-index: 103;
-  font-size:35px;
+  font-size: 35px;
   position: absolute;
   top: 345px;
   left: 605px;
   pointer-events: none;
 }
-
-/*
-#letterDisplayHere{
-  z-index: 100;
+#printPlayerScore{
+  z-index:103;
+  font-size: 39px;
   position: absolute;
-}*/
-/*
-.path--background {
-  fill: rgb(34, 213, 201);
-  stroke: #fff;
-  stroke-width: 0px;
+    top:550px;
+  left:55px;
 }
-.pulse {
-  fill: rgb(255, 74, 74);
+#printOpponentScore{
+  z-index:103;
+  font-size: 39px;
+  position: absolute;
+  top:550px;
+  left:360px;
 }
-.path--foreground {
-  fill: #eee;
-  stroke: #eee;
-  stroke-width: 2px;
-}
-.label {
-  font: 90px "Open Sans";
-  font-weight: 900;
-  text-anchor: middle;
-  fill: rgb(34, 213, 201);
-}
-*/

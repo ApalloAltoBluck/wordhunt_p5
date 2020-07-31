@@ -9,23 +9,19 @@
   <link rel="stylesheet" href="style.css" />
   <!-- import the p5.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
-  <!-- import the d3 library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
-  <!--include p5.collide2D addon library-->
-  <script src="https://unpkg.com/p5.collide2d"></script>
-
+  <!-- import the socket.io library -->
   <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-  
-  <script src="letterBox.js"></script>
-  <script src="class-letter.js"></script>  
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
-
 </head>
 
 <body>
-	<span id="printName"></span>
+    <!-- divs for our app's elements with css to control the z-index for layering-->
+	  <span id="printName"></span>
     <span id="printOpponentName"></span>
     <div id="arrayImages"></div>
+    <div id="printScoreRealTime"></div>
+    <div id="printPlayerScore"></div>
+    <div id="printOpponentScore"></div>
+    <div id="newWoodBackground"></div>
     <div id="displayLetter1"></div>
     <div id="displayLetter2"></div>
     <div id="displayLetter3"></div>
@@ -40,6 +36,7 @@
     <div id="displayLetterUp6"></div>
     <span id="countdown"></span>
     <div class="background">
+      <!-- The Main Javascript File -->
       <script src="sketch.js"></script>
     </div>
 </body>
