@@ -1,20 +1,47 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Anagrams</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- import the p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
+  <!-- import the d3 library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+  <!--include p5.collide2D addon library-->
+  <script src="https://unpkg.com/p5.collide2d"></script>
+
   <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.1.4/lib/p5.min.js"></script>
   
+  <script src="letterBox.js"></script>
+  <script src="class-letter.js"></script>  
   <script language="javascript" type="text/javascript" src="sketch.js"></script>
 
 </head>
 
 <body>
-	<p id="playerText">Type your name below</p>
-    <p id="opponentText">Then choose an opponent</p>
-	<input type="text" id="playerInput">
-	<button id="playerButton">Set name</button>
-	<input type="text" id="opponentInput">
-	<button id="opponentButton">Find Opponent</button>
-	<ul id="playerList"></ul>
+	<span id="printName"></span>
+    <span id="printOpponentName"></span>
+    <div id="arrayImages"></div>
+    <div id="displayLetter1"></div>
+    <div id="displayLetter2"></div>
+    <div id="displayLetter3"></div>
+    <div id="displayLetter4"></div>
+    <div id="displayLetter5"></div>
+    <div id="displayLetter6"></div>
+    <div id="displayLetterUp1"></div>
+    <div id="displayLetterUp2"></div>
+    <div id="displayLetterUp3"></div>
+    <div id="displayLetterUp4"></div>
+    <div id="displayLetterUp5"></div>
+    <div id="displayLetterUp6"></div>
+    <span id="countdown"></span>
+    <div class="background">
+      <script src="sketch.js"></script>
+    </div>
 </body>
 </html>
