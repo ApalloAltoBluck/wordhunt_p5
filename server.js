@@ -7,7 +7,7 @@
 // http://itp.nyu.edu/~sve204/liveweb_fall2013/week3.html
 
 //Oliver's letter/word code below
-/*require("@babel/core").transform("code");
+require("@babel/core").transform("code");
 
 let checkWord = require('check-word'),
     words = checkWord('en'); // setup the language for check, default is en
@@ -78,7 +78,7 @@ const getWords = (array) => {
   }
   else
     return wordArray;
-}*/
+}
 
 //Rachel's server code below
 

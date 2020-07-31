@@ -1,21 +1,20 @@
 {
-  "name": "sockets_p5",
+  "name": "wordhunt_p5",
   "version": "1.0.0",
-  "description": "This is an example for how to use sockets with p5.js.",
+  "description": "\"anagrams game\"",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ApalloAltoBluck/wordhunt_p5.git"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "check-word": "^1.1.0",
-    "express": "^4.17.1",
-    "socket.io": "^2.3.0",
-    "word-check": "^1.0.2"
+  "bugs": {
+    "url": "https://github.com/ApalloAltoBluck/wordhunt_p5/issues"
   },
-  "devDependencies": {
-    "@babel/core": "^7.10.5",
-    "@babel/preset-env": "^7.10.4"
-  }
+  "homepage": "https://github.com/ApalloAltoBluck/wordhunt_p5#readme"
 }
