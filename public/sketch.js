@@ -27,7 +27,7 @@ let button,
   letterToMoveInd;
 let letterBoxes = [];
 let letterTiles = [];
-
+let words; 
 //Socket stuffs
 let socket, player, opponent, game;
 let players = {};
@@ -51,7 +51,6 @@ function playerString(p) {
 
 function setup() {
   // Canvas & color settings
-
 
   createCanvas(800, 800);
   colorMode(RGB, 255);
@@ -86,9 +85,25 @@ function setup() {
   }); 
   socket.on('gameData', function(data) { 
     game = data;
+    player.hasOpponent = true;
+    words = new Set(game.words);
     console.log("gameData", data);
   });
-  
+  socket.on('opponentChoseMe', function(data) {
+        opponent = players[data.name];
+
+        opponentName = data.name;
+        player.hasOpponent = true;
+
+        console.log("opponent " + n + " chose me");
+        startButton = createButton("START GAME");
+        startButton.mouseClicked(setLetterBoxes);
+        startButton.size(200, 100);
+        //startButton.position(310, 350); MIDDLE OF SCREEN
+        startButton.position(310, 360);
+        startButton.style("font-family", "Arial");
+        startButton.style("font-size", "32px");
+  });
 
   //input boxes for name
   nameInputBox = createInput("Input Your Name");
@@ -119,7 +134,6 @@ function handlePlayerInput() {
     }
     else
     {
-  
   player = new Player(n, 0);
   console.log({
     name: player.name,
@@ -138,7 +152,6 @@ function startRequest() {
   hideStartItems();
   var n = partnerInputBox.value();
 
-  
     if(n in players)
     {
       if(players[n].hasOpponent)
@@ -148,21 +161,17 @@ function startRequest() {
       }
       else
       {
-  
-
         opponent = players[n];
         socket.emit('pairUp', { id: opponent.id });
   
-  opponentName = n;
-  console.log(opponentName);
-  console.log("pair up emitted");
-  player.hasOpponent = true;
-  console.log("chose opponent " + n);
-  
-        document.getElementById("opponentText").innerHTML = opponent.name + " " + opponent.id;
+        opponentName = n;
+        console.log(opponentName);
+        console.log("pair up emitted");
+        player.hasOpponent = true;
+
+        console.log("chose opponent " + n);
       }
     }
-    
   
     else
     {
@@ -358,7 +367,7 @@ function setLetterBoxes() {
 }
 
 function dictionaryVerif() {
-  if(!player.foundWords.has(userClickedLetters) && game.words.has(userClickedLetters))
+  if(!player.foundWords.has(userClickedLetters) && words.has(userClickedLetters))
   {
     console.log(userClickedLetters + " was valid");
     player.score += 100 * userClickedLetters.length;

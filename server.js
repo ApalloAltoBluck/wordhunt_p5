@@ -157,6 +157,7 @@ io.sockets.on('connection',
       console.log('games', games);
       sendGameData(socket.id);
       sendGameData(data.id);
+      io.to(data.id).emit("opponentChoseMe", players[socket.id]);
     });
 
     socket.on('disconnect', function(reason) 
