@@ -403,7 +403,7 @@ function scoreRealTime() {
 }
 
 function timerCountdown() {
-  var seconds = 30,
+  var seconds = 60,
     $seconds = document.querySelector("#countdown");
   (function countdown() {
     $seconds.textContent = seconds + " second" + (seconds == 1 ? "" : "s");
