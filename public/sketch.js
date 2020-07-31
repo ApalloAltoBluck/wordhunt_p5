@@ -95,7 +95,7 @@ function setup() {
         opponentName = data.name;
         player.hasOpponent = true;
 
-        console.log("opponent " + n + " chose me");
+        console.log("opponent " + data.name + " chose me");
         startButton = createButton("START GAME");
         startButton.mouseClicked(setLetterBoxes);
         startButton.size(200, 100);
