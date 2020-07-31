@@ -13,6 +13,16 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "check-word": "^1.1.0",
+    "express": "^4.17.1",
+    "socket.io": "^1.7.4",
+    "word-check": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4"
+  },
   "bugs": {
     "url": "https://github.com/ApalloAltoBluck/wordhunt_p5/issues"
   },
