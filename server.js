@@ -121,7 +121,7 @@ var games = {};
 function Player(id, name) {
   this.id = id;
   this.name = name;
-  this.score = 0;
+  this.score = -1;
   this.hasOpponent = false;
 }
 
@@ -136,11 +136,6 @@ function Game(p1, p2) {
   this.words = a.w; //call oliver's function to get possible words from letters
   this.winner;
 }
-
-//setInterval(heartbeat, 33);
-//function heartbeat() {
-//  io.sockets.emit('heartbeat', players);
-//}
 
 function sendGameData(id) 
 {
@@ -161,12 +156,6 @@ io.sockets.on('connection',
       io.sockets.emit('allPlayerData', players);
     });
 
-    socket.on('update', function(data) 
-    {      
-      players[socket.id].name = data.name;
-      players[socket.id].score = data.score;
-    });
-
     socket.on('pairUp', function(data) 
     { 
       players[socket.id].hasOpponent = true;
@@ -179,6 +168,17 @@ io.sockets.on('connection',
       sendGameData(socket.id);
       sendGameData(data.id);
       io.to(data.id).emit("opponentChoseMe", players[socket.id]);
+    });
+
+    socket.on('playerScore', function(data) 
+    { 
+      players[socket.id].score = data.score;
+      io.to(data.opponent).emit("opponentScore", {score: data.score});
+    });
+
+    socket.on('getOpponentScore', function(data)
+    {
+      io.to(data.opponent).emit("opponentScore", {score: players[data.opponent].score});
     });
 
     socket.on('disconnect', function(reason) 

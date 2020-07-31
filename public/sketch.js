@@ -25,23 +25,20 @@ let opponentScore = 0;
 let letterBoxes = [];
 let letterTiles = [];
 let releasedLetters = [];
-let userClickedLetters = [];
-let words; 
+let userClickedLetters = "";
+let words;
+let receivedOpponentScore = false;
 
 //Socket stuffs
 let socket, player, opponent, game;
 let players = {};
 
-//Holds player info and functions
+//Holds player info
 function Player(name, score) {
   this.name = name;
   this.score = score;
   this.hasOpponent = false;
   this.foundWords = new Set();
-  this.update = function()
-  {
-    socket.emit('update', { name: this.name, score: this.score });
-  }
 }
 
 function setup() {
@@ -62,7 +59,8 @@ function setup() {
   woodBackground.position(5, 5);
  
   //more socket stuff 
-  socket = io.connect(window.location.hostname); //'http://localhost:3000');
+  socket = io.connect('http://localhost:3000');
+  //socket = io.connect(window.location.hostname);
   socket.on('allPlayerData', function(data) { 
     players = {};
     for (var key in data)
@@ -73,39 +71,39 @@ function setup() {
   socket.on('gameData', function(data) { 
     game = data;
     player.hasOpponent = true;
+    game.letters = shuffle(game.letters);
     words = new Set(game.words);
     console.log("gameData", data);
   });
   socket.on('opponentChoseMe', function(data) {
-        opponent = players[data.name];
-
-        opponentName = data.name;
-        player.hasOpponent = true;
-
-        console.log("opponent " + data.name + " chose me");
-        hideStartItems();
-        startButton = createButton("START GAME");
-        startButton.mouseClicked(setLetterBoxes);
-        startButton.size(200, 100);
-        //startButton.position(310, 350); MIDDLE OF SCREEN
-        startButton.position(310, 360);
-        startButton.style("font-family", "Arial");
-        startButton.style("font-size", "32px");
-
+    opponent = players[data.name];
+    opponentName = data.name;
+    player.hasOpponent = true;
+    console.log("opponent " + data.name + " chose me");
+    hideStartItems();
+    startButton = createButton("START GAME");
+    startButton.mouseClicked(setLetterBoxes);
+    startButton.size(200, 100);
+    startButton.position(310, 360);
+    startButton.style("font-family", "Arial");
+    startButton.style("font-size", "32px");
+  });
+  socket.on('opponentScore', function(data) {
+    opponent.score = data.score;
+    receivedOpponentScore = true;
+    console.log("opponentscore", opponent.score);
   });
 
-  //Input boxes for name
+  //Input for username and opponent
   nameInputBox = createInput("Input Your Name");
   nameInputBox.position(350, 350);
-
   submitButton = createButton("SUBMIT");
   submitButton.position(350 + nameInputBox.width / 2 - submitButton.width / 2, 430);
   submitButton.mousePressed(handlePlayerInput);
-
   xPositions = [125, 215, 305, 395, 485, 575];
   yPositions = [335, 425];
+  noLoop();
   console.log("Done with setup!");
-  //handlePlayerInput(); //I think this should be removed
 }
 
 function handlePlayerInput() {
@@ -129,7 +127,6 @@ function handlePlayerInput() {
 }
 
 function startRequest() {
-  hideStartItems();
   var n = partnerInputBox.value();
   if(n in players)
   {
@@ -146,6 +143,13 @@ function startRequest() {
       opponentName = n;
       player.hasOpponent = true;
       console.log("Chose opponent " + n);
+      hideStartItems();
+      startButton = createButton("START GAME");
+      startButton.mouseClicked(setLetterBoxes);
+      startButton.size(200, 100);
+      startButton.position(310, 360);
+      startButton.style("font-family", "Arial");
+      startButton.style("font-size", "32px");
     }
   }
   else
@@ -153,13 +157,6 @@ function startRequest() {
     alert("That opponent does not exist. Try again");
     console.log("Opponent " + n + "does not exist.");
   }
-  
-  startButton = createButton("START GAME");
-  startButton.mouseClicked(setLetterBoxes);
-  startButton.size(200, 100);
-  startButton.position(310, 360);
-  startButton.style("font-family", "Arial");
-  startButton.style("font-size", "32px");
 }
 
 function hideStartItems() {
@@ -169,61 +166,134 @@ function hideStartItems() {
   submitButton.hide();
 }
 
-//DONE INTEGRATING TILL HERE
 
 function translation(l, i) {
-  //We want to check if any one of the letters have been pressed
+  //Check if the string is within length
   if (userClickedLetters.length < 6) {
     userClickedLetters += letterToMove;
     console.log("Placing letter " + l);
+    letterTiles[i].position( xPositions[userClickedLetters.length - 1], yPositions[0]);
     if (userClickedLetters.length == 1) {
-      letterTiles[i].position(xPositions[0], yPositions[0]);
       displayLetterUpOne(l);
     } else if (userClickedLetters.length == 2) {
-      letterTiles[i].position(xPositions[1], yPositions[0]);
       displayLetterUpTwo(l);
     } else if (userClickedLetters.length == 3) {
-      letterTiles[i].position(xPositions[2], yPositions[0]);
       displayLetterUpThree(l);
     } else if (userClickedLetters.length == 4) {
-      letterTiles[i].position(xPositions[3], yPositions[0]);
       displayLetterUpFour(l);
     } else if (userClickedLetters.length == 5) {
-      letterTiles[i].position(xPositions[4], yPositions[0]);
       displayLetterUpFive(l);
     } else {
-      letterTiles[i].position(xPositions[5], yPositions[0]);
       displayLetterUpSix(l);
     }
 
     if (i == 0) {
-      displayLetterOne(" ");
+      displayLetterOne("");
     } else if (i == 1) {
-      displayLetterTwo(" ");
+      displayLetterTwo("");
     } else if (i == 2) {
-      displayLetterThree(" ");
+      displayLetterThree("");
     } else if (i == 3) {
-      displayLetterFour(" ");
+      displayLetterFour("");
     } else if (i == 4) {
-      displayLetterFive(" ");
+      displayLetterFive("");
     } else if (i == 5) {
-      displayLetterSix(" ");
+      displayLetterSix("");
     }
   }
 }
 
-function gameOver() //to be called when the timer runs out
-{
-    player.update();
+function createLetterTiles() {
+  for (var q = 0; q < letterTiles.length; q++) {
+    letterTiles[q].hide();
+  }
+  letterTiles = [];
+
+  for (var q = 0; q < 6; q++) {
+    letterTiles.push(
+      createImg(
+        "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fblank-release.svg?v=1596119411539"
+      )
+    );
+    letterTiles[q].size(70, 70);
+    letterTiles[q].position(xPositions[q], yPositions[1]);
+  }
+
+  letterTiles[0].mousePressed(function() {
+    if (!on1 && !timesUp) {
+      letterToMove = game.letters[0];
+      letterToMoveInd = 0;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on1 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+
+  letterTiles[1].mousePressed(function() {
+    if (!on2 && !timesUp) {
+      letterToMove = game.letters[1];
+      letterToMoveInd = 1;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on2 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+
+  letterTiles[2].mousePressed(function() {
+    if (!on3 && !timesUp) {
+      letterToMove = game.letters[2];
+      letterToMoveInd = 2;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on3 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+
+  letterTiles[3].mousePressed(function() {
+    if (!on4 && !timesUp) {
+      letterToMove = game.letters[3];
+      letterToMoveInd = 3;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on4 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+
+  letterTiles[4].mousePressed(function() {
+    if (!on5 && !timesUp) {
+      letterToMove = game.letters[4];
+      letterToMoveInd = 4;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on5 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+
+  letterTiles[5].mousePressed(function() {
+    if (!on6 && !timesUp) {
+      letterToMove = game.letters[5];
+      letterToMoveInd = 5;
+      console.log("letter pressed", letterToMove);
+      console.log("letterToMoveInd", letterToMoveInd);
+      on6 = true;
+      translation(letterToMove, letterToMoveInd);
+    }
+  });
+  console.log("letter tiles created");
 }
 
 function setLetterBoxes() {
   startButton.hide();
-  console.log("timer do be going.");
-  //createLetters();
   createGrayBoxes();
   timerCountdown();
+  console.log("Timer do be going.");
   typeOpponentName();
+  scoreRealTime();
   typeNames();
 
   //score
@@ -246,79 +316,46 @@ function setLetterBoxes() {
   enterButtonUp.size(150, 150);
   enterButtonUp.mousePressed(dictionaryVerif);
 
-  console.log("Can we see this?");
+  createLetterTiles();
+
+  //Display letter text
+  displayLetterOne(game.letters[0]);
+  displayLetterTwo(game.letters[1]);
+  displayLetterThree(game.letters[2]);
+  displayLetterFour(game.letters[3]);
+  displayLetterFive(game.letters[4]);
+  displayLetterSix(game.letters[5]);
+}
+
+function createGrayBoxes() {
+  for (var q = 0; q < 6; q++) {
+    let i = createImg(
+      "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fupdated-gray-slot.svg?v=1595979263009"
+    );
+    i.size(70, 70);
+    i.position(xPositions[q], yPositions[0]);
+    letterBoxes.push(i);
+  }
+}
+
+function originalLocations() {
+  //create all gray boxes and ensure they have no text
+  console.log("original");
 
   for (var q = 0; q < 6; q++) {
-    letterTiles.push(
-      createImg(
-        "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fblank-release.svg?v=1596119411539"
-      )
-    );
-    letterTiles[q].size(70, 70);
     letterTiles[q].position(xPositions[q], yPositions[1]);
-    console.log("Can we see this?");
+    console.log("tiles length: " + letterTiles.length);
   }
 
-  letterTiles[0].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[0];
-    letterToMoveInd = 0;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
+  createGrayBoxes();
+  createLetterTiles();
 
-  letterTiles[1].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[1];
-    letterToMoveInd = 1;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
-
-  letterTiles[2].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[2];
-    letterToMoveInd = 2;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
-
-  letterTiles[3].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[3];
-    letterToMoveInd = 3;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
-
-  letterTiles[4].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[4];
-    letterToMoveInd = 4;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
-
-  letterTiles[5].mousePressed(function() {
-    console.log("letter pressed");
-    letterToMove = game.letters[5];
-    letterToMoveInd = 5;
-    console.log(letterToMove);
-    console.log("letterToMoveInd", letterToMoveInd);
-    translation(letterToMove, letterToMoveInd);
-  });
-
-  //0 1 2 3 4 5
-  /*letterTiles.push(
-      createImg(
-        "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fblank-release.svg?v=1596119411539"
-      )
-    );*/
+  displayLetterUpOne("");
+  displayLetterUpTwo("");
+  displayLetterUpThree("");
+  displayLetterUpFour("");
+  displayLetterUpFive("");
+  displayLetterUpSix("");
 
   displayLetterOne(game.letters[0]);
   displayLetterTwo(game.letters[1]);
@@ -327,49 +364,98 @@ function setLetterBoxes() {
   displayLetterFive(game.letters[4]);
   displayLetterSix(game.letters[5]);
 
-  /*displayLetterUpOne(game.letters[0]);
-  displayLetterUpTwo(game.letters[1]);
-  displayLetterUpThree(game.letters[2]);
-  displayLetterUpFour(game.letters[3]);
-  displayLetterUpFive(game.letters[4]);
-  displayLetterUpSix(game.letters[5]);*/
+  on1 = false;
+  on2 = false;
+  on3 = false;
+  on4 = false;
+  on5 = false;
+  on6 = false;
 }
 
+
 function dictionaryVerif() {
+  console.log(userClickedLetters);
+  console.log(player.foundWords);
+  console.log(words);
   if(!player.foundWords.has(userClickedLetters) && words.has(userClickedLetters))
   {
     console.log(userClickedLetters + " was valid");
     player.score += 100 * userClickedLetters.length;
     player.foundWords.add(userClickedLetters);
+    scoreRealTime();
   }
   else
   {
     console.log(userClickedLetters + " was invalid");
   }
+  //Move letters back to their spaces and clear the current word
+  originalLocations();
   userClickedLetters = "";
-  //code to move letters back to their spaces 
 }
-function timeIsUp() {
-  //hide enter button
-  // hide blocks + letters
-  // show "time is up graphic"
-  // display score of offense & defense
-  /* make an if statement, if offenseScore > defenseScore,
-  else if defenseScore > offenseScore,
- else if defenseScore === offenseScore
-  */
+
+function scoreRealTime() {
+  var yourScore = player.score;
+  $yourScore = document.querySelector("#printScoreRealTime");
+  (function printScoreRealTime() {
+    $yourScore.textContent = "Score: " + player.score;
+  })();
+  console.log(player.score);
 }
+
 function timerCountdown() {
   var seconds = 60,
     $seconds = document.querySelector("#countdown");
   (function countdown() {
     $seconds.textContent = seconds + " second" + (seconds == 1 ? "" : "s");
-    if (seconds-- > 0) setTimeout(countdown, 1000);
-  })();
-  if (seconds == 0) {
-    timeIsUp();
+    if (seconds-- > 0)
+      setTimeout(countdown, 1000);
+    else {
+      timeIsUp();
+      timesUp = true;
+    }
+    })();
+}
+
+function timeIsUp() {
+  socket.emit('playerScore', {score: player.score, opponent: opponent.id});
+  //hide enter button
+  enterButtonUp.hide();  
+  timesUpImage = createImg(
+    "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Ftimeisup.svg?v=1596163592001"
+  );
+  timesUpImage.position(300, 600);
+  timesUpImage.size(200, 200);
+  timesUpImage.mousePressed(dictionaryVerif); 
+  
+  showPlayerResults();
+  loop();
+}
+
+function draw()
+{
+  if(opponent.score >= 0 || receivedOpponentScore)
+  {
+    showOpponentResults();
+    noLoop();
   }
-  //INTEGRATE WITH OLIVER
+}
+
+function showPlayerResults(){
+  var playerScore = player.score;
+  $playerScore = document.querySelector("#printPlayerScore");
+  (function printPlayerScore() {
+    $playerScore.textContent = "Your score: " + playerScore;
+  })();
+  console.log(player.score);
+}
+
+function showOpponentResults() {
+  var opponentScore = opponent.name;
+  $opponentScore = document.querySelector("#printOpponentScore");
+  (function printOpponentScore() { //sorry! dont want to have two w the same name
+    $opponentScore.textContent = opponent.name + "'s Score: " + opponent.score;
+  })();
+  console.log(opponent);
 }
 
 function typeNames() {
@@ -382,10 +468,10 @@ function typeNames() {
 }
 
 function typeOpponentName() {
-  var name = opponentName;
+  var name = opponent.name;
   $name = document.querySelector("#printOpponentName");
   (function printOpponentName() {
-    $name.textContent = opponentName;
+    $name.textContent = opponent.name;
   })();
   console.log(partnerInputBox.value());
 }
@@ -396,7 +482,6 @@ function displayLetterOne(l) {
   (function displayLetter1() {
     console.log(l);
     $choice1.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 
@@ -406,7 +491,6 @@ function displayLetterTwo(l) {
   (function displayLetter2() {
     console.log(l);
     $choice1.textContent = l;
-    console.log("if this works, then yay letter 2");
   })();
 }
 
@@ -416,7 +500,6 @@ function displayLetterThree(letterrrr) {
   (function displayLetter3() {
     console.log(letterrrr);
     $choice1.textContent = letterrrr;
-    console.log("if this works, then yay letter 3");
   })();
 }
 
@@ -426,7 +509,6 @@ function displayLetterFour(letterrrr) {
   (function displayLetter4() {
     console.log(letterrrr);
     $choice1.textContent = letterrrr;
-    console.log("if this works, then yay letter 4");
   })();
 }
 
@@ -436,7 +518,6 @@ function displayLetterFive(letterrrr) {
   (function displayLetter5() {
     console.log(letterrrr);
     $choice1.textContent = letterrrr;
-    console.log("if this works, then yay letter 5");
   })();
 }
 
@@ -446,7 +527,6 @@ function displayLetterSix(letterrrr) {
   (function displayLetter6() {
     console.log(letterrrr);
     $choice1.textContent = letterrrr;
-    console.log("if this works, then yay letter 6");
   })();
 }
 
@@ -456,7 +536,6 @@ function displayLetterUpOne(l) {
   (function displayLetterUp1() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 function displayLetterUpTwo(l) {
@@ -465,7 +544,6 @@ function displayLetterUpTwo(l) {
   (function displayLetterUp2() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 function displayLetterUpThree(l) {
@@ -474,7 +552,6 @@ function displayLetterUpThree(l) {
   (function displayLetterUp3() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 function displayLetterUpFour(l) {
@@ -483,7 +560,6 @@ function displayLetterUpFour(l) {
   (function displayLetterUp4() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 function displayLetterUpFive(l) {
@@ -492,7 +568,6 @@ function displayLetterUpFive(l) {
   (function displayLetterUp5() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
 function displayLetterUpSix(l) {
@@ -501,18 +576,8 @@ function displayLetterUpSix(l) {
   (function displayLetterUp6() {
     console.log(l);
     $choice.textContent = l;
-    console.log("if this works, then yay letter 1");
   })();
 }
-function createGrayBoxes() {
-  for (var q = 0; q < 6; q++) {
-    let i = createImg(
-      "https://cdn.glitch.com/d66db9a2-678a-44dd-b3a0-061d10374d19%2Fupdated-gray-slot.svg?v=1595979263009"
-    );
-    i.size(70, 70);
-    i.position(xPositions[q], yPositions[0]);
-    letterBoxes.push(i);
-  }
-}
+
 
 
