@@ -59,8 +59,8 @@ function setup() {
   woodBackground.position(5, 5);
  
   //more socket stuff 
-  socket = io.connect('http://localhost:3000');
-  //socket = io.connect(window.location.hostname);
+  //socket = io.connect('http://localhost:3000');
+  socket = io.connect(window.location.hostname);
   socket.on('allPlayerData', function(data) { 
     players = {};
     for (var key in data)
