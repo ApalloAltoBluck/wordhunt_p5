@@ -9,12 +9,30 @@
 //Oliver's letter/word code below
 //require("@babel/core").transform("code");
 
+var express = require('express'); // Using express: http://expressjs.com/
+var app = express();
+var server = app.listen(process.env.PORT || 3000); // process.env.PORT is related to deploying on heroku
+app.use(express.static('public'));
+
+var host = server.address().address;
+var port = server.address().port;
+
+console.log('Listening at http://' + host + ':' + port);
+console.log(process.env.PORT);
+console.log(host);
+console.log(port);
+var io = require('socket.io')(server);
+
+
 let checkWord = require('check-word'),
 words = checkWord('en'); // setup the language for check, default is en
 
 let list = require('./list.js');
 
 list = list.list;
+let sixWords = require('./sixLetters.js');
+sixWords = sixWords.sixLetterWords;
+
 
 const letterFrequencies = (function(){
     let letter = [];
@@ -45,7 +63,7 @@ const getRandomLetters = (number) => {
 let getLetterCombinations = (letters) => {
     let currentWord = '';
     let allWords = [];
-
+    console.log("get letter combinations");
     comboHelper(letters,currentWord);
     function comboHelper(letters, currentWord) {
         for (let i = 0; i < letters.length; i++) {
@@ -58,6 +76,8 @@ let getLetterCombinations = (letters) => {
             currentWord = currentWord.slice(0, -1); //remove the last letter you added so you can add a different letter next time
         }
     }
+        console.log("get letter combinations done");
+
     return allWords
 }
 
@@ -72,14 +92,26 @@ const getWords = (array) => {
         }
     }
   } 
-  if (wordArray.length < 30){
-    array = getRandomLetters(6);
-    return getWords(array);
-  }
-  else
+  console.log("get words done");
     return wordArray;
 }
 
+
+let getAnagram = () => {
+  console.log("get anagram");
+var ana = sixWords[Math.floor(Math.random() * sixWords.length)].split(""); // random line from the text file
+console.log("ana", ana);
+console.log("six words");
+var w = getWords(ana);
+console.log("get words");
+
+while (w.length < 30){
+  console.log("while loop");
+    ana = sixWords[Math.floor(Math.random() * sixWords.length)].split("");
+    w = getWords(ana);
+  }
+  return {ana, w};
+}
 
 //Rachel's server code below
 
@@ -98,24 +130,12 @@ function Game(p1, p2) {
   this.player2 = p2;
   //this.letters = ['a', 'b', 'c', 'd', 'e', 'f'];
   //this.words = ['fab', 'fed', 'cab', 'bed', 'bad'];
-  this.letters = getRandomLetters(6); //call oliver's function to get random letters
-  this.words = getWords(this.letters); //call oliver's function to get possible words from letters
+  let a = getAnagram();
+  console.log("a", a);
+  this.letters = a.ana; //call oliver's function to get random letters
+  this.words = a.w; //call oliver's function to get possible words from letters
   this.winner;
 }
-
-var express = require('express'); // Using express: http://expressjs.com/
-var app = express();
-var server = app.listen(process.env.PORT || 3000); // process.env.PORT is related to deploying on heroku
-app.use(express.static('public'));
-
-var host = server.address().address;
-var port = server.address().port;
-
-console.log('Listening at http://' + host + ':' + port);
-console.log(process.env.PORT);
-console.log(host);
-console.log(port);
-var io = require('socket.io')(server);
 
 //setInterval(heartbeat, 33);
 //function heartbeat() {

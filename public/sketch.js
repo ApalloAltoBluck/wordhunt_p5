@@ -4,8 +4,7 @@
 console.log("hi");
 
 //UI/UX Stuffs
-let button,
-  scoreCard,
+let scoreCard,
   myScore,
   opponentCard,
   opponentScore,
@@ -74,7 +73,7 @@ function setup() {
 
   //more socket stuff
   
-  socket = io.connect(window.location.hostname); //'http://localhost:3000'
+  socket = io.connect('http://localhost:3000'); //window.location.hostname);
 
   socket.on('allPlayerData', function(data) { 
     players = {};
