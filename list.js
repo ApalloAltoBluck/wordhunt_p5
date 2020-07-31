@@ -1,4 +1,4 @@
-require("@babel/core").transform("code");
+//require("@babel/core").transform("code");
 
 //Based off of https://en.wikipedia.org/wiki/Letter_frequency
 let list = {
