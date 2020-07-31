@@ -96,6 +96,7 @@ function setup() {
         player.hasOpponent = true;
 
         console.log("opponent " + data.name + " chose me");
+        hideStartItems();
         startButton = createButton("START GAME");
         startButton.mouseClicked(setLetterBoxes);
         startButton.size(200, 100);
@@ -103,6 +104,7 @@ function setup() {
         startButton.position(310, 360);
         startButton.style("font-family", "Arial");
         startButton.style("font-size", "32px");
+
   });
 
   //input boxes for name
