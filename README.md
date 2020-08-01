@@ -12,4 +12,9 @@ Completed for Google CSSI, this is a fully functional p5 JS remake of the Game P
  [Play] 
  
   [Play]: <https://agile-stream-04183.herokuapp.com/>
- 
+  
+  
+### Contributors
+
+Oliver Buckley, Kyla G , Rachel Fernandes, Priscilla Maryanski
+
