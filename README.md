@@ -1,12 +1,15 @@
-# wordhunt_p5
-P5 project for Google CSSI
+# P5 Anagrams - Game Pigeon Clone
 
-Rachel Fernandes
 
-Kyla Guru
 
-Oliver Buckley
+Completed for Google CSSI, this is a fully functional p5 JS remake of the Game Pigeon game anagrams. This was initially completed in 7 days to be shown to Google faculty. 
 
-Priscilla Maryanski
+  - Supports multiple 2 player games
+  - Completely open source
 
-A remake of the Game Pigeon game "Anagrams"
+
+### Working Demo
+ [Play] 
+ 
+  [Play]: <https://agile-stream-04183.herokuapp.com/>
+ 
